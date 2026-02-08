@@ -1,0 +1,16 @@
+h1 {
+    color: rgb(13, 174, 255);
+    font-size: 4vh;
+}
+
+h2 {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    color: hsl(120, 100%, 45%);
+    font-size: 8vw; 
+}
+
+.conteiner {
+    font-size: 30px;
+    font-family: 'Arial Black', Gadget, sans-serif;
+    color: rgba(255, 0, 150, 0.85);
+}

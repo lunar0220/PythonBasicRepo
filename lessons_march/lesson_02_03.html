@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .conteiner{
+            /* включаем flexbox */
+            display: flex; 
+            /* элементы в строчку */
+            /* flex-direction: row; */
+            /* height: 200px; */
+            /* разрешаем перенос */
+            /* flex-wrap: wrap; */
+            /* border: 2px solid gold; */
+            /* выравнивание по главной оси (x) */
+            /* justify-content: space-between; */
+            /* flex-start - (по дефолту) прижаты к началу(слева)
+            flex-end - противоположность flex-start
+            space-between - первый элемент будет в начале, последний в конце а промежутк равномерно распредлелятся 
+            space-around - равновые отступы но ко краям половинные 
+            space-evenly - все отступы будут равно */
+            /* -------------------------------- */
+            /* выравнивание по главной оси (у)  */
+            /* align-items: center;  */
+            /* stretch - по дефолту растягивает на всю высоту контейнера
+            flex-start - к началу оси y
+            flex-end - к концу 
+            center
+            baseline - по базовой линии текста  */
+
+            /* первая строка прижата к верху последняя к низу  */
+            /* align-content: space-between; */
+
+
+        }
+
+        /* flex-basis - начальный размер элемента(200px 50% auto)
+        flex-grow - коофициент(какую долю свободного пространства будет брать элемент)
+        flex-shrink - коофициент(какую долю свободного пространства будет освобождать элемент)
+        flex: grow shrink basis */
+        /* .item1{
+            flex: 1 1 200px;
+        }
+        .item2{
+            flex: 2 1 200px;
+        }
+        .item3{
+            flex: 1 1 200px;
+        } */
+        /* .item3{
+            align-self: flex-end;
+        } */
+        .gallery{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-evenly;
+            align-items: flex-start;
+        }
+        .card{
+            flex: 1 1 200px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .card--featured{
+            align-self: stretch;
+            order: -1;
+            background: #ffe0ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery">
+        <div class="card"> Каррточка 1 </div>
+        <div class="card card--featured"> Каррточка 2 (особая)</div>
+        <div class="card"> Каррточка 3 </div>
+        <div class="card"> Каррточка 4 </div>
+        <div class="card"> Каррточка 5 </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body{
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            background-color: #dae6f2;
+            color: #2a4b67;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 i, h2 i{
+            margin-right: 10px;
+            transition: transform 0.3s, color 0.3s;
+        }
+        h1:hover i, h2:hover i{
+            transform: scale(1.2);
+            color: #bdc5d2;
+        }
+
+        h2:hover i{
+            transform: scale(1.3) rotate(15deg);
+            color: #bdc5d2;
+        }
+        nav{
+            background: #a6bfd5;
+            padding: 15px;
+            border-radius: 100px;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        nav a{
+            color: #58748c;
+            font-size: 20px;
+            text-decoration: none;
+            border-radius: 150px;
+            transition: background 0.3s , color 0.3s;
+        }
+        nav a i{
+            color: #6c7f86;
+            margin-right: 5px;
+        }
+        nav a:hover{
+            background: #2a4b67;
+            color: white;
+            font-style: italic;
+        }
+        nav a:active{
+            transform: translateY(2px);
+        } 
+
+        .gallery {
+            width: 25 vw;
+            background-color: #0d2942;
+            box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.1);
+            outline: 2px #2a4b67;
+            border-radius: 5px;
+            filter:brightness(150%)
+        }
+        img{
+            width: 25 vw;
+            height: auto;
+            max-width: 100%;
+        }
+        img:hover{
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        nav:hover{
+            background: #bdc5d2;
+            transform: scale(1.05);
+            transition: transform 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лапки и уют<i class="fas fa-cat"></i></h1>
+
+    <nav>
+        <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+        <a href="index2.html"><i class="fas fa-image"></i> Галерея животных</a>
+        <a href="#"><i class="fas fa-heart"></i>Избранное</a>
+    </nav>
+
+
+    <h2><i class="fas fa-paw"></i> Наши любимцы</h2>
+    <div class="gallery">
+        <img src="https://i.pinimg.com/736x/24/10/04/241004171a0bd3c2b51a0b6bd75ceb2e.jpg" alt="Котенок1" class="Cat1"></img>
+        <img src="https://i.pinimg.com/736x/b0/99/ae/b099ae564f354c995270b32bca4ac5a3.jpg" alt="Котенок2" class="Cat2"></img>
+        <img src="https://i.pinimg.com/736x/13/9c/04/139c0466879591993e40b0317e330199.jpg" alt="Котенок3" class="Cat3"></img>
+        <img src="https://i.pinimg.com/1200x/2a/43/bb/2a43bbd41d56cf35d2733f9c6ecdeb9f.jpg" alt="Котенок4" class="Cat4"></img>
+    </div>
+
+</body>
+</html>

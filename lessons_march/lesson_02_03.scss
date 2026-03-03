@@ -1,0 +1,35 @@
+$gap: 20px;
+$text-dark: #333;
+$bg: #f8ef88;
+
+@mixin grid($cols){
+    display: flex;
+    flex-wrap: wrap;
+    gap: $gap;
+}
+
+
+.portfolio{
+    background-color: $bg;
+    padding:  40px;
+
+    h2{
+        text-align: center;
+        color: $text-dark;
+    }
+
+    &__grid{
+        @include grid(3);
+
+        @media(max-width: 500px) {
+            @include grid(2)
+        }
+    }
+
+    &__item{
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+}

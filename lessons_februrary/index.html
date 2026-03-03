@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лапки-Главная</title>
+    <link rel="stylesheet" href="css/first.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        body{
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            background-color: #dae6f2;
+            color: #2a4b67;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 i, h2 i{
+            margin-right: 10px;
+            transition: transform 0.3s, color 0.3s;
+        }
+        h1:hover i, h2:hover i{
+            transform: scale(1.2);
+            color: #bdc5d2;
+        }
+        nav{
+            background: #a6bfd5;
+            padding: 15px;
+            border-radius: 50px;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        nav a{
+            color: #2a4b67;
+            font-size: 20px;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: background 0.3s , color 0.3s;
+        }
+        nav a i{
+            color: #6c7f86;
+            margin-right: 8px;
+        }
+        nav a:hover{
+            background: #2a4b67;
+            color: white;
+        }
+        nav a:active{
+            transform: translateY(2px);
+        }  
+        .icon-list{
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            font-size: 36px;
+            margin-top: 40px;
+        }
+        .icon-list i{
+            color: #58748c;
+            transition: all 0.2s;
+        }
+        .icon-list i:hover{
+            color: #2a4b67;
+            transform: scale(1.3) rotate(5deg);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Лапки и уют
+        <i class="fas fa-cat"></i>
+    </h1>
+    
+    <nav>
+        <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+        <a href="index2.html"><i class="fas fa-image"></i> Галерея</a>
+        <a href="#"><i class="fas fa-heart"></i> Избранное</a>
+    </nav>
+
+    <h2>
+        <i class="fas fa-paw"></i> 
+    Настроение сегодня</h2>
+    <img src="https://i.pinimg.com/736x/4c/e1/a7/4ce1a715ded7a213ca83f80ed49f6b15.jpg" alt="Котенок">
+
+    <div class="icon-list">
+        <i class="fas fa-smile-wink"></i>
+        <i class="fas fa-coffee"></i>
+        <i class="fas fa-cookie"></i>
+        <i class="fas fa-cloud-sun"></i>
+    </div>
+
+    <footer>
+        <i class="fas fa-phone-alt"></i> 7(898) 789-87-89
+    </footer>
+</body>
+</html>

@@ -1,0 +1,26 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: beige;
+    margin: 40px;
+    color:coral;
+}
+
+.product {
+    background-color: #fff8e7;
+    padding: 20px;
+    border-radius: 10px;
+    width: 450px;
+    color:black;
+}
+
+img {
+    width: 400px;
+    height: 250px;
+    display: block;
+    margin-top: 10px;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 18px;
+}

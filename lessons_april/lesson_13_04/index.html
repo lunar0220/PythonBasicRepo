@@ -1,0 +1,150 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="first.js" defer></script>
+    <style>
+        #output{
+            margin-top: 10px;
+            padding: 10px;
+            background-color: beige;
+        }
+        #parent, #grandson{
+            background-color: green;
+            margin: 5px;
+            padding: 15px;
+            border: 1px solid;
+        }
+        #child{
+            background-color: rgb(4, 255, 4);
+            margin: 5px;
+            padding: 15px;
+            border: 1px solid;
+        }
+    </style>
+</head>
+<body>
+    <div id="div"></div>
+    <script>
+        // const greenDiv = document.getElementById('div');
+        // greenDiv.addEventListener('click', function(){
+        //     alert('Первый обратчик')
+        // })
+        // greenDiv.addEventListener('click', function(){
+        //     alert('Второй обратчик')
+        // })
+    </script>
+     -->
+
+     <!-- <div id="parent">
+        <button id="child">Нажми</button>
+     </div> -->
+
+
+    <!-- <button id="turnOn">Вкл</button>
+    <button id="turnOff">Выкл</button>
+    <div id="parent">
+        parent
+        <div id="child"> 
+            child<div id="grandson">Внук</div>
+        </div>
+    </div>
+    <div id="output"></div>
+</body>
+</html>  -->
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="first.js" defer></script>
+</head>
+<body>
+    <button id="clicker">Click here!</button>
+</body>
+</html> -->
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="first.js" defer></script>
+</head>
+<body>
+    <a href="https://www.google.com/" id="normal">Обычная ссылка</a>
+    <a href="https://www.google.com/" id="prevented">Измененая ссылка</a> -->
+    <!-- <a href="https://www.итд.com/" id="idk">Какая-то ссылка</a>
+
+    <script> -->
+        <!-- // const link = document.getElementById('prevented');
+        // link.addEventListener('click', (event) => {
+        //     event.preventDefault();
+        //     console.log('Не переходите по ссылке!');
+        // })
+
+        const link1 = document.getElementById('idk');
+        link1.addEventListener('click', (event) => {
+            event.preventDefault();
+            console.log('Переход по ссылке отменен!');
+
+
+            let newThing = document.createElement('button');
+            newThing.onclick = function(){
+                console.log('Что-то новое!');    
+            }
+            newThing.textContent = 'Новая кнопка';
+            document.body.appendChild(newThing);
+        })
+    </script>
+</body>
+</html>  -->
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="myForm" id="registerForm">
+        <input type="text" placeholder="Добавь имя">
+        <input type="email" placeholder="Email">
+        <button>Send</button>
+    </form>
+
+    <script>
+        document.getElementById('registerForm');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const name = form.user.value;
+            const email = form.email.value;
+
+            console.log('Имя' + name);
+            console.log('Имайл' + email)
+        })
+    </script>
+</body>
+</html>

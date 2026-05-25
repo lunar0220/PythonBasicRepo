@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermarket Analitics - Prof Dashboard</title>
+    <script src="https://cnd.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cnd.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cnd.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial Narrow', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        select,
+        button {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select:hover,
+        button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+        }
+
+        .status {
+            text-align: center;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .chart-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .chart-conteiner {
+            position: relative;
+            height: 300px;
+        }
+
+        #loader {
+            text-align: center;
+            color: white;
+            font-size: 1.5rem;
+            padding: 50px;
+        }
+
+        @media (max-width: 769px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Supermarket Analytics Dashboard</h1>
+        <div class="controls">
+            <div class="filters">
+                <select id="fBranch">
+                    <option value="All">Вcе филиалы</option>
+                </select>
+                <select id="fCity">
+                    <option value="All">Вcе города</option>
+                </select>
+                <select id="fPayment">
+                    <option value="All">Вcе оплаты</option>
+                </select>
+                <button onclick="resetFilters()">Сбросить</button>
+            </div>
+            <div class="status" id="status">Загрузка данных...</div>
+        </div>
+    </div>
+
+    <div id="loader">Загрузка и обработка данных...</div>
+
+    <div class="dashboard" id="dashboard" style="display: none;">
+        <div class="chart-card">
+            <h3>1. Продажи по филиалам (Revenue by Branch)</h3>
+            <div class="chart-container"><canvas id="chart1"></canvas></div>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <h3>2. Динамика продаж (Daily sales trend)</h3>
+        <div class="chart-container"><canvas id="chart2"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+        <h3>3. Способы оплаты (Payment methods)</h3>
+        <div class="chart-container"><canvas id="chart3"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+        <h3>4. Рейтинг vs Сумма чека (Rating vs Total)</h3>
+        <div class="chart-container"><canvas id="chart4"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+        <h3>5. Выручка по категориям (Revenue by category)</h3>
+        <div class="chart-container"><canvas id="chart5"></canvas></div>
+    </div>
+    <div class="chart-card">
+        <h3>6. Клиенты: тип х пол (Customer type x gender)</h3>
+        <div class="chart-container"><canvas id="chart6"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+        <h3>7. Цена х кол-во (Price x quantity)</h3>
+        <div class="chart-container"><canvas id="chart7"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+        <h3>8. Город х категория (City x category heatmap)</h3>
+        <div class="chart-container"><canvas id="chart8"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+        <h3>9. Treemap категорий (Category distribution)</h3>
+        <div class="chart-container"><canvas id="chart9"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+        <h3>10. Сравнение филиалов (Branch comparison)</h3>
+        <div class="chart-container"><canvas id="chart10"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+        <h3>11. Распределение цен (Price distribution)</h3>
+        <div class="chart-container"><canvas id="chart11"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+        <h3>12. Поток продаж (Sales flow)</h3>
+        <div class="chart-container"><canvas id="chart12"></canvas></div>
+    </div>
+
+
+
+    <script>
+        let data = [], filtered = [];
+        let charts = {};
+        const state = { branch: 'All', city: 'All', payment: 'All' };
+
+        const colors = {
+            primary: '#667eea',
+            secondary: '#764ba2',
+            accent: '#f093fb',
+            success: '#4facfe',
+            warning: '#fa709a',
+            danger: '#fee140',
+            palette: ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#fa709a', '#fee140', '#30cfd0', '#a8edea']
+        };
+
+        const parseDate = (str) => {
+            const [m, d, y] = str.split('/');
+            return new Date(`${y}-${m}-${d}`);
+        };
+
+        async function loadDate() {
+            const response = await fetch('Supermarket_Sales.csv');
+            const text = await response.text();
+            const rows = text.split('\n').slice(1).filter(r => r.trim());
+
+            data = rows.map(row => {
+                const cols = row.split(',');
+                return {
+                    branch: cols[1], city: cols[2], type: cols[3], gender: cols[4],
+                    line: cols[5], price: parseFloat(cols[6]) || 0, qty: parseInt(cols[7]) || 0,
+                    total: parseFloat(cols[9]) || 0, date: parseDate(cols[10]),
+                    payment: cols[12], gi: parseFloat(cols[13]) || 0, rating: parseFloat(cols[15]) || 0
+                };
+            }).filter(d => d.date && !isNaN(d.total));
+
+            populateFilters();
+            filtered = [...data];
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'grid';
+            renderAllCharts();
+        }
+
+        function populateFilters() {
+            const fill = (id, key) => {
+                const sel = document.getElementById(id);
+                [...new Set(data.map(d => d[key]))].sort().forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v; opt.textContent = v;
+                    sel.appendChild(opt);
+                });
+            };
+            fill('fBranch', 'branch');
+            fill('fCity', 'city');
+            fill('fPayment', 'payment');
+        }
+
+        function applyfilters() {}
+
+        function resetFilters() {
+            state.branch = state.city = state.payment = 'All';
+            ['fBranch', 'fCity', 'fPayment'].forEach(id => document.getElementById(id).value = 'All');
+            filtered = [...data];
+            applyFilters();
+        }
+        ['fBranch', 'fCity', 'fPayment'].forEach(id => {
+            document.getElementById(id).addEventListener('change', (e) => {
+                state[id.replace('f', '').toLowerCase()] = e.target.value;
+                applyFilters()
+            });
+        });
+
+        function renderAllCharts() {
+            if (Object.keys(charts).length === 0) {
+                initCharts();
+            }
+            updateCharts();
+        }
+
+        function initCharts() {
+            charts.chart1 = new Chart(document.getElementById('chart1'), {
+                type: 'bar',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Выручка(₽)', font: { size: 12, weight: 'bold' } } },
+                        x: { title: { display: true, text: 'Филиал', font: { size: 12, weight: 'bold' } } }
+                    }
+                }
+            });
+            charts.chart2 = new Chart(document.getElementById('chart2'), {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Сумма продаж(₽)', font: { size: 12, weight: 'bold' } } },
+                        x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Дата', font: { size: 12, weight: 'bold' } } }
+                    }
+                }
+            });
+            charts.chart3 = new Chart(document.getElementById('chart3'), {
+                type: 'doughtnut',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 15, font: { size: 11 } } }
+                    }
+                }
+            });
+            charts.chart4 = new Chart(document.getElementById('chart4'), {
+                type: 'scatter',
+                data: { datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Сумма чека(₽)', font: { size: 12, weight: 'bold' } } },
+                        x: { min: 4, max: 10, title: { display: true, text: 'Рейтинг', font: { size: 12, weight: 'bold' } } }
+                    }
+                }
+            });
+            charts.chart5 = new Chart(document.getElementById('chart5'), {
+                type: 'bar',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Выручка(₽)', font: { size: 12, weight: 'bold' } } },
+                        x: { title: { display: true, text: 'Категория', font: { size: 12, weight: 'bold' } } }
+                    }
+                }
+            });
+
+            charts.chart6 = new Chart(document.getElementById('chart6'), {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    scales: {
+                        y: { beginAtZero: true, stacked: true, title: { display: true, text: 'Кол-во клиентов', font: { size: 12, weight: 'bold' } } },
+                        x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Дата', font: { size: 12, weight: 'bold' } } }
+                    }
+                }
+            });
+            charts.chart7 = new Chart(document.getElementById('chart7'), {
+                type: 'scatter',
+                data: { datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Цена(₽)', font: { size: 12, weight: 'bold' } } },
+                        x: { min: 4, max: 10, title: { display: true, text: 'Кол-во', font: { size: 12, weight: 'bold' } } }
+                    }
+                }
+            });
+            charts.chart8 = new Chart(document.getElementById('chart8'), {
+                type: 'bar',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { stacked: true, title: { display: true, text: 'Город', font: { size: 12, weight: 'bold' } } },
+                        x: { stacked: true, title: { display: true, text: 'Категория', font: { size: 12, weight: 'bold' } } },
+                    }
+                }
+            });
+
+            charts.chart9 = new Chart(document.getElementById('chart9'), {
+                type: 'pie',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { padding: 15, font: { size: 11 } } }
+                    }
+                }
+            });
+            charts.chart10 = new Chart(document.getElementById('chart10'), {
+                type: 'radar',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { beginAtZero: true },
+                    }
+                }
+            });
+            charts.chart11 = new Chart(document.getElementById('chart11'), {
+                type: 'bar',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Цена(₽)', font: { size: 12, weight: 'bold' } } },
+                        x: { title: { display: true, text: 'Категория', font: { size: 12, weight: 'bold' } } }
+                    }
+                }
+            });
+            charts.chart12 = new Chart(document.getElementById('chart12'), {
+                type: 'doughtnut',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 15, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+
+        function updateCharts() {
+            //Chart 1: Sale by branch
+            const branchData = d3Group(filtered, d => d.branch, d => d.total);
+            charts.chart1.data = {
+                labels: [...branchData.keys()],
+                datasets: [{
+                    label: 'Выручка',
+                    data: [...branchData.values()],
+                    backgroundColor: colors.palette.slice(0, 3),
+                    borderColor: colors.palette.slice(0, 3),
+                    borderWidth: 2
+                }]
+            };
+            charts.chart1.update();
+
+            //Chart 2: Daily sales 
+            const dailyDate = d3Group(filtered, d => d.data.toISOString().split('T')[0], d => d.total);
+            const sortedDates = [...dailyDate.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+            charts.chart2.data = {
+                labels: sortedDates.map(d => d[0]),
+                datasets: [{
+                    label: 'Продажи',
+                    data: sortedDates.map(d => d[1]),
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderColor: colors.primary,
+                    fill: true,
+                    tension: 0.4
+                }]
+            };
+            charts.chart2.update();
+
+            //Chart 3: Payment methods 
+            const paymentDate = d3Group(filtered, d => d.payment, d => 1, 'count');
+            charts.chart3.data = {
+                labels: [...paymentDate.keys()],
+                datasets: [{
+                    data: [...parseDate.values()],
+                    backgroundColor: colors.palette.slice(0.3)
+                }]
+            };
+            charts.chart3.update();
+
+            //Chart 4: Rating vs Total
+            const validScatter = filtered.filter(d => d.rating > 0 && d.total > 0);
+            charts.chart4.data = {
+                datasets: [{
+                    label: 'Транзакции',
+                    data: validScatter.map(d => ({ x: d.rating, y: d.total })),
+                    backgroundColor: 'rgba(240, 147, 251, 0.6)',
+                    borderColor: colors.accent,
+                    borderWidth: 1
+                }]
+            };
+            charts.chart4.update();
+
+            //Chart 5: Revenue by category
+            const catDate = d3Group(filtered, d => d.line, d => a.total);
+            const sortedCats = [...catDate.entries()].sort((a, b) => b[1] - a[1]);
+            charts.chart5.data = {
+                labels: sortedCats.map(d => d[0]),
+                datasets: [{
+                    label: 'Выручка',
+                    data: sortedCats.map(d => d[1]),
+                    backgroundColor: colors.palette,
+                }]
+            };
+            charts.chart5.update();
+            //Chart 5: Customer type x gender
+            const customerDate = new Map();
+            filtered.forEach(d => {
+                const data = d.data.toISOString().split('Т')[0];
+                const key = `${d.type} - ${d.gener}`;
+                if (!customerDate.has(data)) customerDate.set(date, new Map());
+                const dateMap = customerDate.get(data);
+                dateMap.set(key, (dateMap.get(key) || 0) + 1);
+            });
+
+            const allKey = new Set();
+            customerDate.forEach(map => map.forEach((_, k) => allKey.add(k)));
+            const sortedDates2 = [...customerDate.keys()].sort();
+            charts.chart6.data = {
+                labels: sortedDates2,
+                datasets: [...allKeys].map((key, i) => ({
+                    label: key,
+                    date: sortedDates2.map(date => customerDate.get(date).get(key) || 0),
+                    backgroundColor: `rgba(${i * 50}, ${100 + i * 30}, ${200 - i * 20}, 0.6)`,
+                    borderColor: colors.palette[i % colors.palette.length],
+                    fill: true,
+                    tension: 0.4
+                }))
+            };
+            charts.chart6.update();
+
+            //Chart 7: Price x quantity
+            const validBubble = filtered.filter(d => d.price > 0 && d.qty > 0);
+            charts.chart7.data = {
+                datasets: [{
+                    label: 'Товары',
+                    data: validBubble.map(d => ({ x: d.qty, y: d.price })),
+                    backgroundColor: 'rgba(250, 112, 154, 0.6)',
+                    borderColor: colors.warning,
+                    borderWidth: 1
+                }]
+            };
+            charts.chart7.update();
+
+            //Chart 8: City x category heatmap
+            const cityCatData = new Map();
+            filtered.forEach(d => {
+                if (!cityCatData.has(d.city)) cityCatData.set(d.city, new Map());
+                const cityMap = cityCatData.get(d.city);
+                cityMap.set(d.line, (cityMap.get(d.line) || 0) + d.total);
+            });
+            const allCities = [...cityCatData.keys()].sort();
+            const allCats = new Set();
+            cityCatData.forEach(map => map.forEach((_, k) => allCats.add(k)));
+            const sortedCats2 = [...allCats].sort();
+            charts.chart8.data = {
+                labels: allCities,
+                datasets: sortedCats.map((cat, i) => ({
+                    label: cat,
+                    date: allCities.map(city => cityCatData.get(city).get(cat) || 0),
+                    backgroundColor: colors.palette[i % colors.palette.length],
+                }))
+            };
+            charts.chart8.update();
+
+            //Chart 9: Category pie
+            charts.chart9.data = {
+                labels: sortedCats.map(d => d[0]),
+                datasets: [{
+                    date: sortedCats.map(d => d[1]),
+                    backgroundColor: colors.palette
+                }]
+            };
+            charts.chart9.update();
+
+            //Chart 10: Branch comparison
+            const branch = [...new Set(filtered.map(d => d.branch))].sort();
+            const metrics = ['total', 'gi', 'qty', 'rating'];
+            const metricLabels = ['Revenue', 'Income', 'Quantity', 'Rating'];
+
+            charts.chart10.data = {
+                labels: metricLabels,
+                datasets: branches.map((branch, i) => {
+                    const branchData = filtered.filter(d => d.branch === branch);
+                    return {
+                        label: `Branch ${branch}`,
+                        date: metrics.map(m => m === 'rating' ? d3.mean(branchData, d => d[m]) : d3.sum(branchData, d => d[m])),
+                        borderColor: colors.palette[i],
+                        backgroundColor: `rgba(${hexToRgb(colors.palette[i])}, 0.2)`
+                    };
+                })
+            };
+            charts.chart10.update();
+
+            //Chart 11: Box plot (using min, q1, median, q3, max)
+            const boxData = sortedCats.map(([cat]) => {
+                const prices = filtered.filter(d => d.line === cat).map(d => d.price).sort((a, b) => a - b);
+                const q1 = prices[Math.floor(prices.length * 0.25)] || 0;
+                const median = prices[Math.floor(prices.length * 0.5)] || 0;
+                const q3 = prices[Math.floor(prices.length * 0.75)] || 0;
+                return { cat, q1, median, q3 };
+            });
+
+            chart.chart11.data = {
+                labels: boxData.map(d => d.cat),
+                datasets: [{
+                    label: 'Q1',
+                    data: boxData.map(d => d.q1),
+                    backgroundColor: 'rgba(102, 126, 234, 0.5)',
+                }, {
+                    label: 'Median',
+                    data: boxData.map(d => d.median - d.q1),
+                    backgroundColor: 'rgba(118, 75, 162, 0.5)',
+                }, {
+                    label: 'Q3',
+                    data: boxData.map(d => d.q3 - d.median),
+                    backgroundColor: 'rgba(240, 147, 251, 0.5)',
+                }]
+            };
+            chart.chart11.update();
+
+            //Chart 12: Sunburst
+            const flowDate = new Map();
+            filtered.forEach(d => {
+                const key = `${d.branch} -> ${d.city} -> ${d.payment}`;
+                flowDate.set(key, (flowDate.get(key) || 0) + 1);
+            });
+
+            const top10 = [...flowDate.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+            charts.chart12.data = {
+                labels: top10.map(d => d[0]),
+                datasets: [{
+                    data: top10.map(d => d[1]),
+                    backgroundColor: colors.palette
+                }]
+            };
+            chart.chart12.update();
+        }
+
+        function d3Group(data, keyFn, valueFn, mode = 'sum') {
+            const map = new Map();
+            data.forEach(d => {
+                const key = keyFn(d);
+                const val = valueFn(d);
+                if (mode === 'sum') {
+                    map.set(key, (map.get(key) || 0) + val);
+                } else if (mode === 'count') {
+                    map.set(key, (map.get(key) || 0) + 1);
+                }
+            });
+            return map;
+        }
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ?
+                `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` :
+                '100, 100, 200';
+        }
+        window.onload = loadDate;
+    </script>
+</body>
+
+</html>

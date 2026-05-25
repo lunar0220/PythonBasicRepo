@@ -1,0 +1,32 @@
+{
+    "users": [
+        {
+        "name": "Nastya",
+        "age": 20,
+        "contacts": {
+            "phone": "+7 987 032 46 26",
+            "email": "nastya@gmail.com"
+        }
+    },
+
+    {
+        "name": "Ron",
+        "age": 22,
+        "contacts": {
+            "phone": "+7 987 032 46 26",
+            "email": "ron@gmail.com"
+        }
+
+    },
+
+    {
+        "name": "Aiko",
+        "age": 20,
+        "contacts": {
+            "phone": "+7 987 032 46 26",
+            "email": "aiko@gmail.com"
+        }
+
+        }
+    ]
+}

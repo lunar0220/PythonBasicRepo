@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Index page</h1>
+    <div class="content"></div>
+    <script>
+        const contentDiv = document.querySelector(".content");
+        const hr = new XMLHttpRequest();
+
+        hr.onload = () => {
+            if(hr.status == 200){
+            const json = hr.response;
+                const table = createTable();
+                const users = json.users;
+                for(let i = 0; i < users.length; i++){
+                    const user = users[i];
+                    const rows = createRow(user.name, user.age, user.contacts);
+                    table.appendChild(rows);
+                }
+                contentDiv.appendChild(table);
+            }
+        };
+        hr.open("GET", "/data");
+        hr.responseType = "json";
+        hr.setRequestHeader("Accept", "text/xml");
+        hr.send();
+
+        function createTable(){
+            const table = document.createElement("table");
+            const headerRow = document.createElement("tr");
+            const nameColumnHeader = document.createElement("th");
+            const ageColumnHeader = document.createElement("th");
+            const contactsColumnHeader = document.createElement("th");
+            nameColumnHeader.appendChild(document.createTextNode("Name"));
+            ageColumnHeader.appendChild(document.createTextNode("Age"));
+            contactsColumnHeader.appendChild(document.createTextNode("Contacts"))
+            headerRow.appendChild(nameColumnHeader);
+            headerRow.appendChild(ageColumnHeader);
+            headerRow.appendChild(contactsColumnHeader);
+            table.appendChild(headerRow);
+            return table;
+        };
+
+        function createRow(userName, userAge, userContacts){
+            const row = document.createElement("tr");
+            const nameColumn = document.createElement("td");
+            const ageColumn = document.createElement("td");
+            const contactsColumn = document.createElement("td");
+
+
+            nameColumn.appendChild(document.createTextNode(userName));
+            ageColumn.appendChild(document.createTextNode(userAge));
+            contactsColumn.appendChild(document.createTextNode(userContacts));
+
+            row.appendChild(nameColumn);
+            row.appendChild(ageColumn);
+            row.appendChild(contactsColumn);
+
+            return row;
+        }
+    </script>
+</body>
+</html>

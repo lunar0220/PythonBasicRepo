@@ -1,0 +1,26 @@
+.portfolio {
+  background-color: #f8ef88;
+  padding: 40px;
+}
+.portfolio h2 {
+  text-align: center;
+  color: #333;
+}
+.portfolio__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+@media (max-width: 500px) {
+  .portfolio__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}
+.portfolio__item {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}/*# sourceMappingURL=lesson_02_03.css.map */

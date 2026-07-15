@@ -3,15 +3,14 @@ function check() {
     let b = Number(document.getElementById("b1").value);
     let result = Number(document.getElementById("result1").value);
 
+    // Блокируем поле ввода
     document.getElementById("result1").disabled = true;
 
-    let message = document.getElementById("message");
-
     if (result === a + b) {
-        message.innerHTML = "Верно!";
-        message.style.color = "green";
+        alert("Верно!");
+        document.getElementById("result1").style.color = "green";
     } else {
-        message.innerHTML = "Неверно!";
-        message.style.color = "red";
+        alert("Неверно!");
+        document.getElementById("result1").style.color = "red";
     }
 }

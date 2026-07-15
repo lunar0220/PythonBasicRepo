@@ -3,7 +3,6 @@ function check() {
     let b = Number(document.getElementById("b1").value);
     let result = Number(document.getElementById("result1").value);
 
-    // Блокируем поле ввода
     document.getElementById("result1").disabled = true;
 
     if (result === a + b) {
